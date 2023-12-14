@@ -1,0 +1,195 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Show Profile</title>
+    <link rel="stylesheet" href="https://cdn.datatables.net/1.13.6/css/jquery.dataTables.min.css">
+    <script src="https://code.jquery.com/jquery-3.7.0.min.js"
+      integrity="sha256-2Pmvv0kuTBOenSvLm6bvfBSSHrUJ+3A7x6P5Ebd07/g=" crossorigin="anonymous"></script>
+    <script src="https://cdn.datatables.net/1.13.6/js/jquery.dataTables.min.js"></script>
+<style>
+
+    .gradient-custom {
+        /* fallback for old browsers */
+        background: #f6d365;
+        
+        /* Chrome 10-25, Safari 5.1-6 */
+        background: -webkit-linear-gradient(to right bottom, rgba(246, 211, 101, 1), rgba(253, 160, 133, 1));
+        
+        /* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */
+        background-image: linear-gradient( #FF6900, #FFC80E);  
+         }
+    .update
+    {
+      text-decoration: none;
+      color: black;
+      font-size: 20px;
+    }
+    .update:hover
+    {
+      color: red;
+
+    }
+    #myTable thead tr {
+    background-color: #f47c00;
+    color: #fff;
+    padding: 10px;
+  }
+
+  #myTable tbody tr:nth-child(even) {
+    background-color: #F6A36A;
+    /* Alternate background color for even rows */
+    color: #FFF;
+    /* Text color for even rows */
+  }
+
+  #myTable tbody tr:nth-child(odd) {
+    background-color: #FFF;
+    /* Background color for odd rows */
+    color: #f47c00;
+    /* Text color for odd rows */
+  }
+  button:nth-child(even) {
+    background-color: Red;
+    color: #f47c00;
+    border: none;
+    padding: 5px 10px;
+  }
+
+  button:nth-child(odd) {
+    background-color: #f47c00;
+    color: #FFF;
+    border: none;
+    padding: 5px 10px;
+  }
+    </style>
+    <%- include ('../partials/head'); %>
+</head>
+<body>
+    <section class="vh-100" style="background: linear-gradient(to right bottom, rgba(246, 211, 101, 1), rgba(253, 160, 133, 1))
+    ">
+        <div class="container py-5 h-100" >
+          <div class="row d-flex justify-content-center align-items-center h-100">
+                        <div class="col col-lg-6 mb-4 mb-lg-0">
+              <div class="card mb-3" style="border-radius: .5rem;">
+                <div class="row g-0">
+                  <div class="col-md-4 gradient-custom text-center text-white"
+                    style="border-top-left-radius: .5rem; border-bottom-left-radius: .5rem;">
+                    <i class="fa fa-user-circle" aria-hidden="true" style="font-size: 100px; margin-top: 30%;"></i>
+                    <h3><%= data.firstname %> <%= data.lastname %></h3>
+                    <p>Customer</p>
+                  </div>
+                  <div class="col-md-8">
+                    <div class="card-body p-4">
+
+                      <h6>Information</h6>
+                      <hr class="mt-0 mb-4">
+                      <div class="row pt-1">
+                        <div class="col-6 mb-3">
+                          <h6>Name</h6>
+                          <p class="text-muted"><%= data.firstname %> <%= data.lastname %></p>
+                        </div>
+                        <div class="col-6 mb-3">
+                          <h6>Email</h6>
+                          <p class="text-muted"><%= data.email %></p>
+                        </div>
+                      </div>
+                      <hr class="mt-0 mb-4">
+                      <div class="row pt-1">
+                        <div class="col-6 mb-3">
+                          <h6>Contact</h6>
+                          <p class="text-muted"><%= data.contact %></p>
+                        </div>
+                        <div class="col-6 mb-3">
+                          <h6>Address</h6>
+                          <p class="text-muted"><%= data.street%>,<%= data.city%>,<%= data.state%></p>
+                        </div>
+                      </div>
+                     
+                      <hr class="mt-0 mb-4">
+                      <div class="row pt-1">
+                        <div class="col-6 mb-3">
+                          <a href="/userProduct/userupdate?email=<%= data.email %>" class="update">Update</a>
+                        </div>
+                        <div class="col-6 mb-3" id="orders">
+                          <a href="/userProduct/orders?email=<%= data.email %>" onclick="showOrders()" class="update">Orders</a>
+                        </div>
+                        <div class="col-6 mb-3">
+                          <a href="/userProduct/userCancel" class="update">Cancel</a>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div id="datatable" style="display: none;background-color: aliceblue;">
+          
+              <table id="myTable" class="display nowrap" style="width:100%;">
+                <thead>
+                  <tr>
+                    <th>Product name</th>
+                    <th>Quantity</th>
+                    <th>Price</th>
+                    <th>Total price</th>
+                    <th>Orders</th>
+                    <th>Cancel</th>
+                    <th>Review</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <% for (let i = 0; i < orderecord.length; i++) { %>
+                      <tr >
+                          <td><%= orderecord[i].product_name %></td>
+                          <td><%= orderecord[i].total_product %></td>
+                          <td><%= orderecord[i].per_product_price %></td>
+                          <td><%= orderecord[i].product_price %></td>
+                          <td><%= orderecord[i].order %></td>
+                         <td><a href="/userproduct/cancelproduct/<%=orderecord[i]._id%>"> <button type="submit" class="custom-button">Cancel</button></a></td>
+                         <td>  <button class="btn reviewButton text-white" id="reviewButton<%= i %>"
+                          style="background-color: #f47c00; margin-left: 30px;">Review</button></td>
+                         <td>  
+                          <form action="/userproduct/reviewProduct" method="post">
+                          <td><input type="hidden" id="productId" name="productId" value="<%= orderecord[i].product_id%>"></td>
+                         <td><textarea name="review" id="reviewInput<%= i %>" class="review"
+                              placeholder="Enter a review here..."
+                              style="display: none; margin-left: 18px; margin-top: 20px; border:2px solid #f47c00;"
+                              cols="40" rows="2" disabled></textarea></td> 
+                          <td><button class="btn" type="submit" id="submitButton<%= i %>"
+                              style="display: none; margin-left: 150px; margin-top: 10px;background-color: #f47c00;"
+                              disabled>Submit</button></td>
+                      </form>
+                    </td>
+                      </tr>
+                  <% } %>
+              </tbody>
+              </table>
+            </div>
+          </div>
+          </div>
+        </div>
+       
+      </section>
+      <script>
+        function showOrders(){
+          var table = document.getElementById('datatable');
+          table.style.display ="block";
+        }
+    $(document).ready(function () {
+      $("#myTable").DataTable();
+    });
+    document.querySelectorAll('.reviewButton').forEach((button, i) => {
+            button.addEventListener('click', function () {
+                const reviewInput = document.getElementById('reviewInput' + i);
+                const submitButton = document.getElementById('submitButton' + i);
+                reviewInput.style.display = 'block';
+                reviewInput.disabled = false;
+                submitButton.style.display = 'block';
+                submitButton.disabled = false;
+            });
+        });
+      </script>
+</body>
+</html>
+
